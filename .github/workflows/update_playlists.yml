@@ -1,42 +1,44 @@
 name: Aggiorna Lista M3U DaddyLive
 
 on:
+  # Permette di far partire l'aggiornamento manualmente dal pannello
+  workflow_dispatch:
 
-workflow_dispatch:
-
-schedule:
-- cron: '0 */6 * * *'
+  # Esegue lo script automaticamente ogni 6 ore
+  schedule:
+    - cron: "0 */6 * * *"
 
 permissions:
-contents: write
+  contents: write
 
 jobs:
-generate_playlists:
-runs-on: ubuntu-latest
+  generate_playlists:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: 1. Checkout del codice (Clona la repository)
-    uses: actions/checkout@v4
+    steps:
+      - name: 1. Checkout del codice
+        uses: actions/checkout@v4
 
-  - name: 2. Setup di Python 3.11
-    uses: actions/setup-python@v5
-    with:
-      python-version: '3.11'
+      - name: 2. Setup di Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-  - name: 3. Installa le dipendenze (libreria requests)
-    run: pip install requests
+      - name: 3. Installa le dipendenze
+        run: pip install requests
 
-  - name: 4. Esegui lo script generatore
-    run: python generate_playlists.py
+      - name: 4. Esegui lo script generatore
+        run: python generate_playlists.py
 
-  - name: 5. Carica i file M3U generati su GitHub
-    run: |
-      git config --local user.email "action@github.com"
-      git config --local user.name "GitHub Action Bot"
-      
-      # Aggiunge solo i file .m3u
-      git add *.m3u
-      
-      # Fa il commit solo se ci sono stati cambiamenti, altrimenti salta
-      git commit -m "Auto-aggiornamento lista M3U [skip ci]" || echo "Nessuna modifica da salvare"
-      git push
+      - name: 5. Carica i file M3U generati su GitHub
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+
+          # Aggiunge solo i file .m3u
+          git add *.m3u
+
+          # Effettua il commit solo se ci sono modifiche
+          git commit -m "Auto-aggiornamento lista M3U [skip ci]" || echo "Nessuna modifica da salvare"
+
+          git push
