@@ -1,4 +1,4 @@
-# 📺 EasyProxy IPTV Playlist Generator for Debrify
+# 📺 IPTV Playlist Generator
 
 Generatore automatico di playlist IPTV M3U basato su **Python** e **GitHub Actions**.
 
@@ -10,14 +10,14 @@ La playlist risultante è pronta per essere importata in **Debrify** oppure in q
 
 ## ✨ Funzionalità principali
 
-- 🔄 **Automazione 100% serverless** tramite GitHub Actions
-- ⏰ Aggiornamento automatico ogni **6 ore**
-- 🚀 Esecuzione manuale tramite `workflow_dispatch`
-- 🛡️ **Bypass anti-bot e geoblocking** tramite EasyProxy
-- 🔐 Gestione sicura delle credenziali con **GitHub Secrets**
-- 📺 Playlist M3U compatibile con **Debrify** e player IPTV
-- 🧩 Metadati `#EXTINF` puliti (`tvg-id`, `tvg-name`, `group-title`)
-- ☁️ Nessun server personale da mantenere
+* 🔄 **Automazione 100% serverless** tramite GitHub Actions
+* ⏰ Aggiornamento automatico ogni **6 ore**
+* 🚀 Esecuzione manuale tramite `workflow_dispatch`
+* 🛡️ **Bypass anti-bot e geoblocking** tramite EasyProxy
+* 🔐 Gestione sicura delle credenziali con **GitHub Secrets**
+* 📺 Playlist M3U compatibile con **Debrify** e player IPTV
+* 🧩 Metadati `#EXTINF` puliti (`tvg-id`, `tvg-name`, `group-title`)
+* ☁️ Nessun server personale da mantenere
 
 ---
 
@@ -55,10 +55,10 @@ La playlist risultante è pronta per essere importata in **Debrify** oppure in q
 
 Prima di iniziare assicurati di avere:
 
-- Un account **GitHub**
-- Un'istanza **EasyProxy** funzionante (consigliato: Koyeb)
-- **Cloudflare WARP** abilitato in EasyProxy (`/admin`)
-- Python **3.11+** (solo per esecuzione locale)
+* Un account **GitHub**
+* Un'istanza **EasyProxy** funzionante
+* **Cloudflare WARP** abilitato in EasyProxy (`/admin`)
+* Python **3.11+** (solo per esecuzione locale)
 
 > **Importante:** abilitare Cloudflare WARP riduce il rischio di blocchi IP da parte dei server di streaming.
 
@@ -85,9 +85,9 @@ Su GitHub vai in:
 
 Inserisci:
 
-| Campo | Valore |
-|------|------|
-| **Name** | `EASYPROXY_URL` |
+| Campo      | Valore                          |
+| ---------- | ------------------------------- |
+| **Name**   | `EASYPROXY_URL`                 |
 | **Secret** | `https://tua-istanza.koyeb.app` |
 
 ⚠️ Non inserire lo slash finale `/`.
@@ -105,11 +105,11 @@ Inserisci:
         └── update_playlists.yml
 ```
 
-| File | Descrizione |
-|------|-------------|
+| File                    | Descrizione                                     |
+| ----------------------- | ----------------------------------------------- |
 | `generate_playlists.py` | Script principale di scraping e generazione M3U |
-| `daddylive.m3u` | Playlist generata automaticamente |
-| `update_playlists.yml` | Workflow GitHub Actions |
+| `daddylive.m3u`         | Playlist generata automaticamente               |
+| `update_playlists.yml`  | Workflow GitHub Actions                         |
 
 ---
 
@@ -193,8 +193,8 @@ jobs:
 
 ### Frequenza di aggiornamento
 
-| Cron | Frequenza |
-|------|------------|
+| Cron          | Frequenza  |
+| ------------- | ---------- |
 | `0 */6 * * *` | Ogni 6 ore |
 
 ---
@@ -263,8 +263,8 @@ direttamente nelle impostazioni del servizio EasyProxy.
 
 ### La playlist è vuota
 
-- Verifica che DaddyLive sia raggiungibile.
-- Controlla i log di GitHub Actions.
+* Verifica che DaddyLive sia raggiungibile.
+* Controlla i log di GitHub Actions.
 
 ### Errore `EASYPROXY_URL not set`
 
@@ -272,8 +272,8 @@ Assicurati che la secret `EASYPROXY_URL` sia configurata correttamente.
 
 ### Gli stream non partono
 
-- Verifica che EasyProxy sia online.
-- Controlla che Cloudflare WARP sia attivo.
+* Verifica che EasyProxy sia online.
+* Controlla che Cloudflare WARP sia attivo.
 
 ### GitHub Actions non effettua il push
 
@@ -290,11 +290,11 @@ permissions:
 
 Puoi modificare:
 
-- frequenza di aggiornamento (`cron`)
-- nome del file M3U
-- gruppi canali
-- filtri sui canali
-- sorgenti IPTV aggiuntive
+* frequenza di aggiornamento (`cron`)
+* nome del file M3U
+* gruppi canali
+* filtri sui canali
+* sorgenti IPTV aggiuntive
 
 ---
 
@@ -316,6 +316,6 @@ L'utente è l'unico responsabile dell'utilizzo della playlist generata e dell'ac
 
 Se il progetto ti è stato utile:
 
-- lascia una ⭐ al repository
-- apri una **Issue** per bug o suggerimenti
-- contribuisci con una **Pull Request**
+* lascia una ⭐ al repository
+* apri una **Issue** per bug o suggerimenti
+* contribuisci con una **Pull Request**
