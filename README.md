@@ -1,103 +1,153 @@
-# daddylive-auto-m3u-scraper
-📺 EasyProxy IPTV Playlist Generator for Debrify
+# 📺 EasyProxy IPTV Playlist Generator for Debrify
 
-Un sistema completamente automatizzato in Python e GitHub Actions che effettua lo scraping dei canali live da DaddyLive HD, li incapsula in un'istanza proxy personalizzata (EasyProxy su Koyeb) e genera un file .m3u aggiornato periodicamente ogni 6 ore.
+Generatore automatico di playlist IPTV M3U basato su **Python** e **GitHub Actions**.
 
-La lista generata è pronta per essere importata direttamente in Debrify (o in qualsiasi lettore IPTV come TiviMate, Kodi o VLC), consentendo il bypass delle restrizioni geografiche e dei blocchi anti-bot senza caricare l'elaborazione sul client finale.
+Questo progetto effettua lo scraping dei canali live da **DaddyLive HD**, li instrada attraverso una propria istanza **EasyProxy** (ad esempio ospitata su **Koyeb**) e genera automaticamente un file `daddylive.m3u` aggiornato periodicamente ogni **6 ore**.
 
-🚀 Caratteristiche Principali
+La playlist risultante è pronta per essere importata in **Debrify** oppure in qualsiasi player IPTV compatibile, come **TiviMate**, **Kodi**, **VLC** o **OTT Navigator**.
 
-Automazione 100% Serverless: Esecuzione programmata tramite GitHub Actions (ogni 6 ore o su richiesta via workflow_dispatch).
+---
 
-Bypass Anti-Bot e HLS Proxying: Integrazione diretta con EasyProxy per la risoluzione trasparente degli stream .m3u8 di DaddyLive HD.
+## ✨ Funzionalità principali
 
-Sicurezza delle credenziali: Supporto nativo per le GitHub Secrets per evitare di esporre l'URL o la chiave dell'istanza EasyProxy all'interno del codice sorgente.
+- 🔄 **Automazione 100% serverless** tramite GitHub Actions
+- ⏰ Aggiornamento automatico ogni **6 ore**
+- 🚀 Esecuzione manuale tramite `workflow_dispatch`
+- 🛡️ **Bypass anti-bot e geoblocking** tramite EasyProxy
+- 🔐 Gestione sicura delle credenziali con **GitHub Secrets**
+- 📺 Playlist M3U compatibile con **Debrify** e player IPTV
+- 🧩 Metadati `#EXTINF` puliti (`tvg-id`, `tvg-name`, `group-title`)
+- ☁️ Nessun server personale da mantenere
 
-Compatibilità Debrify: Formattazione metadati #EXTINF pulita (tvg-id, tvg-name) per la massima compatibilità con la griglia e il player nativo di Debrify.
+---
 
-🏗️ Architettura del Sistema
+## 🏗️ Architettura del sistema
 
- ┌───────────────────────┐
- │   DaddyLive HD Site   │ (Scraping dell'elenco canali)
- └───────────┬───────────┘
-             │
-             ▼
- ┌───────────────────────┐
- │ GitHub Actions (Cron) │ ──► Esegue `generate_playlists.py` ogni 6 ore
- └───────────┬───────────┘
-             │
-             ▼
- ┌───────────────────────┐
- │ Repository GitHub     │ ──► Salva/aggiorna il file `daddylive.m3u`
- └───────────┬───────────┘
-             │ (Import URL Raw)
-             ▼
- ┌───────────────────────┐
- │ Debrify / IPTV Player │ ──► Invia richiesta HLS a EasyProxy (Koyeb)
- └───────────┬───────────┘
-             │
-             ▼
- ┌───────────────────────┐
- │ EasyProxy + Cloudflare│ ──► Risolve lo stream e restituisce il video
- └───────────────────────┘
+```text
+┌───────────────────────┐
+│   DaddyLive HD Site   │  Scraping elenco canali
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│ GitHub Actions (Cron) │  Esegue generate_playlists.py ogni 6 ore
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│ Repository GitHub     │  Aggiorna daddylive.m3u
+└───────────┬───────────┘
+            │ URL RAW
+            ▼
+┌───────────────────────┐
+│ Debrify / IPTV Player │  Richiede lo stream M3U8
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│ EasyProxy + Cloudflare│  Risolve e proxyfizza lo stream
+└───────────────────────┘
+```
 
+---
 
-🛠️ Guida all'Installazione e Configurazione
+## 📦 Prerequisiti
 
-1. Prerequisiti
+Prima di iniziare assicurati di avere:
 
-Un'istanza EasyProxy funzionante (ad es. ospitata su Koyeb).
+- Un account **GitHub**
+- Un'istanza **EasyProxy** funzionante (consigliato: Koyeb)
+- **Cloudflare WARP** abilitato in EasyProxy (`/admin`)
+- Python **3.11+** (solo per esecuzione locale)
 
-Assicurarsi che Cloudflare WARP sia abilitato nel pannello /admin di EasyProxy (per prevenire blocchi IP sui server di streaming).
+> **Importante:** abilitare Cloudflare WARP riduce il rischio di blocchi IP da parte dei server di streaming.
 
-2. Configurazione del Repository GitHub
+---
 
-Clona o Crea un Repository (Pubblico o Privato):
+## 🚀 Installazione
 
+### 1. Clona il repository
+
+```bash
 git clone https://github.com/tuo-utente/iptv-auto-playlists.git
 cd iptv-auto-playlists
+```
 
+Oppure crea un nuovo repository su GitHub e carica i file del progetto.
 
-Imposta la Secret dell'URL Proxy:
+---
 
-Vai su GitHub -> Settings -> Secrets and variables -> Actions.
+### 2. Configura la secret `EASYPROXY_URL`
 
-Clicca su New repository secret.
+Su GitHub vai in:
 
-Name: EASYPROXY_URL
+**Settings → Secrets and variables → Actions → New repository secret**
 
-Secret: https://tua-istanza.koyeb.app (senza slash finale /).
+Inserisci:
 
-Struttura dei File da inserire:
+| Campo | Valore |
+|------|------|
+| **Name** | `EASYPROXY_URL` |
+| **Secret** | `https://tua-istanza.koyeb.app` |
 
-generate_playlists.py: Lo script principale di generazione.
+⚠️ Non inserire lo slash finale `/`.
 
-.github/workflows/update_playlists.yml: Il file di automazione per le GitHub Actions.
+---
 
-📜 Struttura dello Script Python (generate_playlists.py)
+## 📁 Struttura del progetto
 
-Lo script legge l'URL base dell'istanza dalla variabile d'ambiente EASYPROXY_URL ed estrae i canali tramite scraping HTML:
+```text
+.
+├── generate_playlists.py
+├── daddylive.m3u
+└── .github
+    └── workflows
+        └── update_playlists.yml
+```
 
+| File | Descrizione |
+|------|-------------|
+| `generate_playlists.py` | Script principale di scraping e generazione M3U |
+| `daddylive.m3u` | Playlist generata automaticamente |
+| `update_playlists.yml` | Workflow GitHub Actions |
+
+---
+
+## 🐍 Script Python
+
+Lo script utilizza la variabile d'ambiente `EASYPROXY_URL` per costruire gli URL proxy degli stream.
+
+```python
 import os
-import re
-import sys
-import urllib.parse
 import requests
 
 EASYPROXY_BASE_URL = os.environ.get(
-    "EASYPROXY_URL", "https://tua-istanza-default.koyeb.app"
+    'EASYPROXY_URL',
+    'https://tua-istanza-default.koyeb.app'
 )
-DADDY_OUTPUT_FILE = "daddylive.m3u"
-DADDY_DOMAIN = "https://dlhd.st"
-DADDY_CHANNELS_URL = f"{DADDY_DOMAIN}/24-7-channels.php"
 
-# ... (funzioni fetch_daddylive_channels e generate_daddylive_m3u)
+DADDY_OUTPUT_FILE = 'daddylive.m3u'
+DADDY_DOMAIN = 'https://dlhd.st'
+DADDY_CHANNELS_URL = f'{DADDY_DOMAIN}/24-7-channels.php'
 
+# funzioni fetch_daddylive_channels()
+# funzioni generate_daddylive_m3u()
+```
 
-⏱️ Workflow GitHub Actions (.github/workflows/update_playlists.yml)
+Esecuzione locale:
 
-Il workflow pianificato esegue lo script e committa le modifiche al file .m3u solo se sono presenti aggiornamenti:
+```bash
+export EASYPROXY_URL=https://tua-istanza.koyeb.app
+python generate_playlists.py
+```
 
+---
+
+## ⚙️ GitHub Actions
+
+Crea il file `.github/workflows/update_playlists.yml`.
+
+```yaml
 name: Aggiorna Lista M3U DaddyLive
 
 on:
@@ -111,54 +161,161 @@ permissions:
 jobs:
   generate_playlists:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 1. Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 2. Setup Python 3.11
+      - name: Setup Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: 3. Installazione Dipendenze
+      - name: Installazione dipendenze
         run: pip install requests
 
-      - name: 4. Esecuzione Generatore
+      - name: Generazione playlist
         env:
           EASYPROXY_URL: ${{ secrets.EASYPROXY_URL }}
         run: python generate_playlists.py
 
-      - name: 5. Commit e Push su GitHub
+      - name: Commit e push
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action Bot"
+          git config --local user.email 'action@github.com'
+          git config --local user.name 'GitHub Action Bot'
+
           git add *.m3u
-          git commit -m "Auto-aggiornamento lista M3U [skip ci]" || echo "Nessuna modifica da salvare"
+
+          git commit -m 'Auto-aggiornamento lista M3U [skip ci]' || echo 'Nessuna modifica'
+
           git push
+```
 
+### Frequenza di aggiornamento
 
-📺 Integrazione con Debrify
+| Cron | Frequenza |
+|------|------------|
+| `0 */6 * * *` | Ogni 6 ore |
 
-Una volta eseguito il primo workflow con successo, apri il file daddylive.m3u generato nella cartella del repository GitHub.
+---
 
-Clicca sul pulsante Raw per accedere al file di testo puro.
+## ▶️ Primo avvio
 
-Copia l'URL dalla barra degli indirizzi:
+1. Vai su **Actions** nel repository.
+2. Seleziona **Aggiorna Lista M3U DaddyLive**.
+3. Premi **Run workflow**.
+4. Attendi il completamento del job.
 
-https://raw.githubusercontent.com/<TUO_UTENTE>/<NOME_REPO>/main/daddylive.m3u
+Al termine comparirà il file `daddylive.m3u` aggiornato.
 
+---
 
-Apri Debrify, naviga alla sezione IPTV / Playlist M3U, aggiungi una nuova sorgente e incolla l'URL Raw.
+## 📺 Integrazione con Debrify
 
-🔒 Sicurezza e Privacy
+Dopo il primo aggiornamento:
 
-Repository Privato: Se rendi il repository privato per nascondere il file .m3u, devi utilizzare un Personal Access Token (PAT) con permessi di lettura per consentire a Debrify di scaricare la lista:
+1. Apri `daddylive.m3u` nel repository GitHub.
+2. Clicca su **Raw**.
+3. Copia l'URL mostrato nel browser.
 
-https://raw.githubusercontent.com/<UTENTE>/<REPO>/main/daddylive.m3u?token=<IL_TUO_PAT>
+Esempio:
 
+```text
+https://raw.githubusercontent.com/TUO_UTENTE/NOME_REPOSITORY/main/daddylive.m3u
+```
 
-Protezione EasyProxy: Per impedire a terzi di sfruttare la tua istanza Koyeb, valuta di configurare la variabile API_PASSWORD nelle impostazioni dell'ambiente del tuo server EasyProxy.
+4. Apri **Debrify → IPTV / Playlist M3U**.
+5. Aggiungi una nuova sorgente e incolla l'URL.
 
-⚠️ Disclaimer
+La playlist verrà aggiornata automaticamente ogni 6 ore.
 
-Questo progetto è sviluppato a scopo puramente didattico ed informativo per dimostrare l'interoperabilità tra sistemi di media extraction e lettori streaming. L'utente si assume la piena responsabilità dell'uso delle liste M3U e dei contenuti accessibili tramite di esse.
+---
+
+## 🔒 Sicurezza e privacy
+
+### Repository pubblico
+
+La playlist sarà accessibile pubblicamente tramite l'URL RAW.
+
+### Repository privato
+
+Per consentire a Debrify di leggere il file è necessario utilizzare un **Personal Access Token (PAT)** con permessi di lettura.
+
+Esempio:
+
+```text
+https://raw.githubusercontent.com/UTENTE/REPOSITORY/main/daddylive.m3u?token=IL_TUO_PAT
+```
+
+### Protezione di EasyProxy
+
+Per evitare utilizzi non autorizzati della tua istanza, configura la variabile d'ambiente:
+
+```env
+API_PASSWORD=una_password_sicura
+```
+
+direttamente nelle impostazioni del servizio EasyProxy.
+
+---
+
+## 🧪 Troubleshooting
+
+### La playlist è vuota
+
+- Verifica che DaddyLive sia raggiungibile.
+- Controlla i log di GitHub Actions.
+
+### Errore `EASYPROXY_URL not set`
+
+Assicurati che la secret `EASYPROXY_URL` sia configurata correttamente.
+
+### Gli stream non partono
+
+- Verifica che EasyProxy sia online.
+- Controlla che Cloudflare WARP sia attivo.
+
+### GitHub Actions non effettua il push
+
+Verifica che il workflow abbia:
+
+```yaml
+permissions:
+  contents: write
+```
+
+---
+
+## 🛠️ Personalizzazione
+
+Puoi modificare:
+
+- frequenza di aggiornamento (`cron`)
+- nome del file M3U
+- gruppi canali
+- filtri sui canali
+- sorgenti IPTV aggiuntive
+
+---
+
+## 📄 Licenza
+
+Questo progetto è distribuito con licenza **MIT**. Consulta il file `LICENSE` per i dettagli.
+
+---
+
+## ⚠️ Disclaimer
+
+Questo progetto è fornito esclusivamente a scopo **didattico e dimostrativo** per mostrare l'integrazione tra tecniche di scraping, proxy HLS e player IPTV.
+
+L'utente è l'unico responsabile dell'utilizzo della playlist generata e dell'accesso ai contenuti tramite essa. Gli autori non ospitano, redistribuiscono né garantiscono la disponibilità dei flussi streaming di terze parti.
+
+---
+
+## ⭐ Supporto
+
+Se il progetto ti è stato utile:
+
+- lascia una ⭐ al repository
+- apri una **Issue** per bug o suggerimenti
+- contribuisci con una **Pull Request**
