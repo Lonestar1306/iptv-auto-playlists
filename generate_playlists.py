@@ -81,7 +81,8 @@ def generate_daddylive_m3u(channels):
     
     try:
         with open(DADDY_OUTPUT_FILE, "w", encoding="utf-8") as f:
-            f.write("#EXTM3U\n\n")
+            # Rimosso il doppio a capo, lasciamo una sola riga nuova
+            f.write("#EXTM3U\n")
             
             for channel in channels:
                 ch_id = channel.get("id", "")
@@ -96,8 +97,10 @@ def generate_daddylive_m3u(channels):
                 # Utilizziamo l'endpoint HLS ottimizzato di EasyProxy
                 proxy_url = f"{EASYPROXY_BASE_URL}/proxy/manifest.m3u8?url={encoded_stream_url}&h_User-Agent={encoded_ua}&h_Referer={DADDY_DOMAIN}/"
                 
-                f.write(f'#EXTINF:-1 tvg-id="{ch_id}" tvg-name="{ch_name}", {ch_name}\n')
-                f.write(f'{proxy_url}\n\n')
+                # Aggiunto il parametro group-title e rimosso lo spazio dopo la virgola
+                f.write(f'#EXTINF:-1 tvg-id="{ch_id}" tvg-name="{ch_name}" group-title="DaddyLive",{ch_name}\n')
+                # Rimosso il doppio a capo alla fine dell'URL
+                f.write(f'{proxy_url}\n')
                 
         print(f"[DADDYLIVE] [+] Lista generata con successo: {DADDY_OUTPUT_FILE}")
         
