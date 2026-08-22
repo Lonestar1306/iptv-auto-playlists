@@ -15,7 +15,7 @@ except ImportError:
 # CONFIGURAZIONE GENERALE E DADDYLIVE
 # ==========================================
 # L'URL della tua istanza EasyProxy su Koyeb
-EASYPROXY_BASE_URL = "https://breakable-brenn-piratescorporation-622824b8.koyeb.app"
+EASYPROXY_BASE_URL = "https://pirates-corp.duckdns.org"
 
 # Parametri DaddyLive
 DADDY_OUTPUT_FILE = "daddylive.m3u"
