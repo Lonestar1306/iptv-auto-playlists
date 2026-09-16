@@ -10,11 +10,7 @@ except ImportError:
     print("[!] Errore: la libreria 'requests' non è installata.")
     print("[!] Installala eseguendo: pip install requests")
     sys.exit(1)
-
-# ==========================================
-# CONFIGURAZIONE GENERALE E DADDYLIVE
-# ==========================================
-# L'URL della tua istanza EasyProxy su Koyeb
+#Inserisci qui l'URL della tua istanza Easyproxy
 EASYPROXY_BASE_URL = ""
 
 # Parametri DaddyLive
@@ -81,7 +77,7 @@ def generate_daddylive_m3u(channels):
     
     try:
         with open(DADDY_OUTPUT_FILE, "w", encoding="utf-8") as f:
-            # Rimosso il doppio a capo, lasciamo una sola riga nuova
+            
             f.write("#EXTM3U\n")
             
             for channel in channels:
@@ -97,9 +93,9 @@ def generate_daddylive_m3u(channels):
                 # Utilizziamo l'endpoint HLS ottimizzato di EasyProxy
                 proxy_url = f"{EASYPROXY_BASE_URL}/proxy/manifest.m3u8?url={encoded_stream_url}&h_User-Agent={encoded_ua}&h_Referer={DADDY_DOMAIN}/"
                 
-                # Aggiunto il parametro group-title e rimosso lo spazio dopo la virgola
+                # Aggiunto il parametro group-title 
                 f.write(f'#EXTINF:-1 tvg-id="{ch_id}" tvg-name="{ch_name}" group-title="DaddyLive",{ch_name}\n')
-                # Rimosso il doppio a capo alla fine dell'URL
+                
                 f.write(f'{proxy_url}\n')
                 
         print(f"[DADDYLIVE] [+] Lista generata con successo: {DADDY_OUTPUT_FILE}")
