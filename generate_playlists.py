@@ -10,22 +10,23 @@ except ImportError:
     print("[!] Installala eseguendo: pip install requests")
     sys.exit(1)
 
-# ============================================= #
-# CONFIGURAZIONE GENERALE EASYPROXY E DIRECTORY #
-# ============================================= #
+# ==========================================
+# CONFIGURAZIONE GENERALE EASYPROXY E DIRECTORY
+# ==========================================
 EASYPROXY_BASE_URL = ""
-OUTPUT_DIR = "/output"
 
-# ========================================== #
-# PARAMETRI DADDYLIVE                        #
-# ========================================== #
+OUTPUT_DIR = "/opt/iptv-updater/output"
+
+# ==========================================
+# PARAMETRI DADDYLIVE
+# ==========================================
 DADDY_OUTPUT_FILE = os.path.join(OUTPUT_DIR, "daddylive.m3u")
 DADDY_DOMAIN = "https://dlive.sx"
 DADDY_CHANNELS_URL = f"{DADDY_DOMAIN}/24-7-channels.php"
 
-# ========================================== #
-# PARAMETRI LIVETV (GitHub)                  #
-# ========================================== #
+# ==========================================
+# PARAMETRI LIVETV (GitHub)
+# ==========================================
 LIVETV_OUTPUT_FILE = os.path.join(OUTPUT_DIR, "livetv_master.m3u")
 LIVETV_EPG_FILE = os.path.join(OUTPUT_DIR, "livetv_epg.xml.gz")
 
